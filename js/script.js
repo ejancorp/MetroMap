@@ -40,7 +40,6 @@
         this.svg = d3.select('#map').append('svg')
             .attr('width', this.width * this.getMetroRed().length)
             .attr('height', this.height)
-            //.attr('transform', 'rotate(90)')
             .selectAll('g')
             .data(this.getMetroRed())
             .enter().append('g')
@@ -56,10 +55,6 @@
         this.svg.append('g');
     };
 
-    Map.prototype.getMetroRed = function() {
-        return this.data[this.metroRedKey].map(this.getStationNameFromObject);
-    };
-
     Map.prototype.setCircles = function() {
         this.svg.append('circle')
             .attr('cx', this.circle.xaxis)
@@ -68,6 +63,9 @@
             .style('fill', this.circle.fill)
             .style('stroke', this.circle.stroke)
             .style('stroke-width', this.circle.strokeWidth)
+            .style('visibility', function(d) {
+                return d.name ? 'visible' : 'hidden';
+            });
         return this;
     };
 
@@ -80,7 +78,12 @@
             .attr('font-family', this.fontFamily)
             .attr('font-weight', this.fontWeightBold)
             .style('fill', this.fill)
-            .text(String);
+            .text(function(d) {
+                return d.name;
+            })
+            .style('visibility', function(d) {
+                return d.name ? 'visible' : 'hidden';
+            });
         return this;
     };
 
@@ -108,9 +111,58 @@
         return this;
     };
 
-    Map.prototype.getStationNameFromObject = function(station) {
-        return String(station.name).toUpperCase();
+    /**
+     * [description]
+     */
+
+    Map.prototype.fillEmptyStations = function(stations) {
+        var range = this.createRange(parseInt(stations[0].number), parseInt(stations.slice(-1)[0].number));
+        return range.map(this.generateMissingStation.bind({
+            stations: stations,
+            numbers: stations.map(this.getStationNumberFromObject)
+        }));
     };
+
+    Map.prototype.createRange = function(start, end) {
+        return Array
+            .apply(null, Array((end - start) + 1))
+            .map(function(discard, n) {
+                return n + start;
+            });
+    }
+
+    Map.prototype.sortStations = function(a, b) {
+        return a.number - b.number;
+    };
+
+    Map.prototype.getFormattedMetro = function(line) {
+        return this.data[line].map(this.getStationDataFromObject);
+    };
+
+    Map.prototype.getMetroRed = function() {
+        return this.fillEmptyStations(this.getFormattedMetro(this.metroRedKey).sort(this.sortStations));
+    };
+
+    Map.prototype.getStationDataFromObject = function(station) {
+        return {
+            name: station.name,
+            number: parseInt(station.number)
+        };
+    };
+
+    Map.prototype.getStationNumberFromObject = function(station) {
+        return parseInt(station.number);
+    };
+
+    Map.prototype.generateMissingStation = function(val, index) {
+        if (this.numbers.indexOf(val) !== -1)
+            return this.stations[this.numbers.indexOf(val)];
+
+        return {
+            name: '',
+            number: val
+        };
+    }
 
     var app = new Map('#map', window.Metro);
     app.init();
