@@ -55,6 +55,10 @@
         this.svg.append('g');
     };
 
+    Map.prototype.setMap = function(mapWidth, mapHeight, mapData) {
+
+    };
+
     Map.prototype.setCircles = function() {
         this.svg.append('circle')
             .attr('cx', this.circle.xaxis)
