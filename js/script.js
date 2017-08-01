@@ -4,10 +4,9 @@
 
   var Map = function(element, data) {
 
+    this.stationCollection = [];
     this.element = element;
     this.data = data;
-
-    this.stationCollection = [];
     this.svg = null;
 
     this.metroRedKey = 'red';
@@ -35,47 +34,15 @@
     this.strokeWidth = 20;
     this.fontFamily = '\'Open Sans\', sans-serif';
     this.fontWeightBold = 'bold';
-
-
-    /** New Vars **/
-
-    this.element = element;
-    this.data = data;
-
   };
 
-  Map.prototype.initialize = function() {
-
-  };
-
-  /** Prototype **/
-  /******************************************/
   Map.prototype.init = function() {
-    //this.metroOne();
-    this.metroTwo();
-  };
 
-  Map.prototype.metroOne = function() {
     this.svg = d3.select('#map').append('svg')
       .attr('width', this.width * this.getMetroRed().length)
-      .attr('height', this.height)
-      .selectAll('g')
+      .attr('height', this.height).selectAll('g')
+
       .data(this.getMetroRed())
-      .enter().append('g')
-      .attr('transform', this.setElementPosition.bind(this));
-
-    this.setLeftPreviousLine().setLeftNextLine();
-    this.setCircles().setRightStationName();
-
-    this.svg.append('g');
-  }
-
-  Map.prototype.metroTwo = function() {
-    this.svg = d3.select('#map').append('svg')
-      .attr('width', this.width * this.getMetroRed(1).length)
-      .attr('height', this.height)
-      .selectAll('g')
-      .data(this.getMetroRed(1))
       .enter().append('g')
       .attr('transform', this.setElementPosition.bind(this));
 
@@ -250,13 +217,12 @@
     return a.number - b.number;
   };
 
-  Map.prototype.getFormattedMetro = function(line, part) {
-    part = typeof(part) === 'undefined' ? 0 : part;
-    return this.data[line][part].map(this.getStationDataFromObject);
+  Map.prototype.getFormattedMetro = function(line) {
+    return this.data[line][0].map(this.getStationDataFromObject);
   };
 
-  Map.prototype.getMetroRed = function(part) {
-    return this.fillEmptyStations(this.getFormattedMetro(this.metroRedKey, part).sort(this.sortStations));
+  Map.prototype.getMetroRed = function() {
+    return this.fillEmptyStations(this.getFormattedMetro(this.metroRedKey).sort(this.sortStations));
   };
 
   Map.prototype.getStationDataFromObject = function(station) {
@@ -285,6 +251,6 @@
   window.Metro.Map = (window.Metro.Map = {});
 
   window.Metro.Map = new Map('#map', window.MetroDB);
-  window.Metro.Map.initialize();
+  window.Metro.Map.init();
 
 })();
