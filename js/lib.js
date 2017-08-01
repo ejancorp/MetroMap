@@ -43,6 +43,7 @@
         _.each(this.dataCells, this.setCellPolyline.bind(this));
         _.each(this.dataCells, this.setCellCircle.bind(this));
         _.each(this.dataCells, this.setStationNumber.bind(this));
+        _.each(this.dataCells, this.setStationName.bind(this));
     };
 
     Map.prototype.forEachStation = function(station) {
@@ -54,13 +55,24 @@
         cell.element.append("text")
             .attr('x', this.grid.getObjectXpos)
             .attr('y', this.grid.getObjectYpos)
-            .attr('dy', '1em')
             .attr('font-size', '12px')
             .attr('font-family', this.fontFamily)
             .attr('font-weight', this.fontWeightBold)
             .style('fill', this.fontFill)
             .text(this.getStationNumber.bind(this, cell))
-            .attr('transform', this.getTextTransformTranslate);
+            .attr('transform', this.getNumberTransformTranslate);
+    };
+
+    Map.prototype.setStationName = function(cell) {
+        cell.element.append("text")
+            .attr('x', this.grid.getObjectXpos)
+            .attr('y', this.grid.getObjectYpos)
+            .attr('font-size', '12px')
+            .attr('font-family', this.fontFamily)
+            .attr('font-weight', this.fontWeightBold)
+            .style('fill', this.fontFill)
+            .text(this.getStationName.bind(this, cell))
+            .attr('transform', this.getNameTransformTranslate.bind(this, cell));
     };
 
     Map.prototype.setCellCircle = function(cell) {
@@ -83,17 +95,26 @@
     };
 
     Map.prototype.getStationNumber = function(cell, data) {
+        return cell.number;
+    };
+
+    Map.prototype.getStationName = function(cell, data) {
         return cell.name;
     };
 
-    Map.prototype.getTextTransformTranslate = function(data) {
-        return "translate(" + (data.width / 2) + "," + "0" + ")";
+    Map.prototype.getNumberTransformTranslate = function(data) {
+        return "translate(" + ((data.width / 2) - 8) + "," + ((data.height / 2) + 4) + ")";
+    }
+
+    Map.prototype.getNameTransformTranslate = function(cell, data) {
+        var width = data.width;
+        if (!this.direction[cell.direction])
+            width = 0 - data.width
+        return "translate(" + width + "," + (data.height / 2) + ")";
     }
 
     Map.prototype.getLinePoints = function(cell, data) {
-
         var x, y, z = [];
-
         switch (this.curve[cell.curve]) {
             case this.curve.top:
                 x = [data.x, data.y];
