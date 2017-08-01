@@ -82,13 +82,6 @@
       .text(this.getStationName.bind(this, cell))
       .attr('transform', this.getNameTransformTranslate.bind(this, cell));
 
-    // cell.element.append("line")
-    //   .attr("x1", this.grid.getObjectXpos)
-    //   .attr("x2", this.grid.getObjectXpos)
-    //   .attr("y1", this.grid.getObjectYpos)
-    //   .attr("y2", 0)
-    //   .style('stroke', this.color)
-    //   .style('fill', this.lineFill)
   };
 
   Map.prototype.setCellCircle = function(cell) {
@@ -210,7 +203,10 @@
     return "translate(" + data.width / 2 + "," + data.height / 2 + ")";
   };
 
-  var app = new Map(window.Red, window.Map.Grid, "#DA262F");
-  app.init();
+  var RedLine = new Map(window.Red, window.Map.Grid, "#DA262F");
+  RedLine.init();
+
+  var GreenLine = new Map(window.Green, window.Map.Grid, "#45A247");
+  GreenLine.init();
 
 })(d3, _);
