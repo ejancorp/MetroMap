@@ -28,9 +28,10 @@
     this.svg = null;
     this.row = null;
     this.column = null;
+    this.cell = null;
 
     this.cellClass = "cell";
-    this.fill = "#fff";
+    this.fill = "none";
     this.fillOpacity = "1";
     this.stroke = "#000";
   };
@@ -49,12 +50,19 @@
       .append("g")
       .attr("class", "row");
 
-    this.column = this.row.selectAll(".cell")
+
+    this.column = this.row.selectAll(".box")
       .data(this.getObjectData)
       .enter()
-      .append("rect")
+      .append("g")
+      .attr("class", "box")
       .attr("class", this.cellClass)
       .attr("id", this.getObjectId.bind(this))
+      .attr("x", this.getObjectXpos)
+      .attr("y", this.getObjectYpos)
+      .attr("width", this.getObjectWidth)
+      .attr("height", this.getObjectHeight)
+      .append("rect")
       .attr("x", this.getObjectXpos)
       .attr("y", this.getObjectYpos)
       .attr("width", this.getObjectWidth)

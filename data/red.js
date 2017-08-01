@@ -9,28 +9,28 @@ var Red = [{
   "name": "Emirates",
   "number": 12,
   "position": {
-    x: 44,
-    y: 2
+    x: 4400,
+    y: 200
   },
 }, {
   "name": "Airport Terminal 3",
   "number": 13,
   "position": {
-    x: 43,
-    y: 3
+    x: 4300,
+    y: 300
   },
 }, {
   "name": "Airport Terminal 1",
   "number": 14,
   "position": {
-    x: 42,
-    y: 4
+    x: 4200,
+    y: 400
   },
 }, {
   "name": "GGICO",
   "number": 15,
   "position": {
-    x: 41,
-    y: 5
+    x: 4100,
+    y: 500
   },
 }];

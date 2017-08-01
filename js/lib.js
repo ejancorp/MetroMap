@@ -24,11 +24,14 @@
   };
 
   Map.prototype.setCellCircle = function(cell) {
-    console.log(cell.element);
     cell.element
       .append("circle")
-      .attr("cx", 60)
-      .attr("cy", 60)
+      .attr("cx", function(d) {
+        return d.x;
+      })
+      .attr("cy", function(d) {
+        return d.y;
+      })
       .attr("r", 30)
       .style("fill", "#000")
       .style("stroke", "#000")
