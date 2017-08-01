@@ -206,7 +206,7 @@
     window.Map.Grid = new Grid("#map", {
         cols: 50,
         rows: 50,
-        border: true,
+        border: false,
     });
     window.Map.Grid.init();
 

@@ -16,9 +16,19 @@
         this.circleStrokeWidth = 10;
         this.circleRadius = 30;
 
+        this.lineStrokeWidth = 20;
+        this.lineFill = "none";
+
         this.direction = {
             "left": 0,
             "right": 1,
+        };
+
+        this.curve = {
+            "top": 0,
+            "left": 1,
+            "bottom": 2,
+            "right": 3
         };
     }
 
@@ -26,7 +36,6 @@
 
         this.dataCells = _.map(this.data, this.forEachStation.bind(this));
 
-        //_.each(this.dataCells, this.setDiagonalLine.bind(this));
         _.each(this.dataCells, this.setCellPolyline.bind(this));
         _.each(this.dataCells, this.setCellCircle.bind(this));
     };
@@ -47,48 +56,54 @@
             .attr("transform", this.getCircleTranslateCenter);
     };
 
-    Map.prototype.setDiagonalLine = function(cell) {
-        cell.element.append("line")
-            .attr('x1', this.getLineXone.bind(this, cell))
-            .attr('x2', this.getLineXtwo.bind(this, cell))
-            .attr('y1', this.getLineYone.bind(this, cell))
-            .attr('y2', this.getLineYtwo.bind(this, cell))
-            .style('stroke', this.color)
-            .style('stroke-width', 10)
-    };
-
     Map.prototype.setCellPolyline = function(cell) {
         cell.element.append("polyline")
-            .style("stroke", "black")
-            .style("fill", "none")
-            .style("stroke-width", 10)
+            .style('stroke', this.color)
+            .style('fill', this.lineFill)
+            .style('stroke-width', this.lineStrokeWidth)
             .attr("points", this.getLinePoints.bind(this, cell));
     };
 
     Map.prototype.getLinePoints = function(cell, data) {
-        var x = [data.x, data.y + data.height];
-        var y = [data.x + data.width, data.y];
-        return x.join(", ") + " " + y.join(", ");
-    }
 
-    Map.prototype.getLineYone = function(cell, data) {
-        if (!this.direction[cell.direction])
-            return data.y + data.height;
-        return data.y;
-    };
+        var x, y, z = [];
 
-    Map.prototype.getLineYtwo = function(cell, data) {
-        if (!this.direction[cell.direction])
-            return data.y;
-        return data.y + data.height;
-    };
-
-    Map.prototype.getLineXone = function(cell, data) {
-        return data.x;
-    };
-
-    Map.prototype.getLineXtwo = function(cell, data) {
-        return data.x + data.width;
+        switch (this.curve[cell.curve]) {
+            case this.curve.top:
+                x = [data.x, data.y];
+                y = [data.x + (data.width / 2), data.y + (data.height / 2)];
+                z = [data.x + data.width, data.y];
+                return x.join(", ") + " " + y.join(", ") + " " + z.join(", ");
+                break;
+            case this.curve.left:
+                x = [data.x, data.y];
+                y = [data.x + (data.width / 2), data.y + (data.height / 2)];
+                z = [data.x, data.y + data.height];
+                return x.join(", ") + " " + y.join(", ") + " " + z.join(", ");
+                break;
+            case this.curve.bottom:
+                x = [data.x, data.y + data.height];
+                y = [data.x + (data.width / 2), data.y + (data.height / 2)];
+                z = [data.x + data.width, data.y + data.height];
+                return x.join(", ") + " " + y.join(", ") + " " + z.join(", ");
+                break;
+            case this.curve.right:
+                x = [data.x + data.width, data.y];
+                y = [data.x + (data.width / 2), data.y + (data.height / 2)];
+                z = [data.x + data.width, data.y + data.height];
+                return x.join(", ") + " " + y.join(", ") + " " + z.join(", ");
+                break;
+            default:
+                if (this.direction[cell.direction]) {
+                    x = [data.x, data.y]
+                    y = [data.x + data.width, data.y + data.height];
+                } else {
+                    x = [data.x, data.y + data.height];
+                    y = [data.x + data.width, data.y]
+                }
+                return x.join(", ") + " " + y.join(", ")
+                break;
+        }
     };
 
     Map.prototype.getCircleTranslateCenter = function(data) {

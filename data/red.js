@@ -5,7 +5,8 @@ var Red = [{
         x: 4500,
         y: 100
     },
-    "direction": "left"
+    "direction": "left",
+    "curve": "bottom"
 }, {
     "name": "Emirates",
     "number": 12,
