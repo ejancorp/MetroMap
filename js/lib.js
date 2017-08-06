@@ -52,9 +52,11 @@
     _.each(this.dataCells, this.setCellCircle.bind(this));
     _.each(this.dataCells, this.setStationNumber.bind(this));
     _.each(this.dataCells, this.setStationName.bind(this));
+    _.each(this.dataCells, this.setStationClickEvent.bind(this));
   };
 
   Map.prototype.forEachStation = function(station) {
+    station.pulse = false;
     station.element = this.grid.svg.select("#" + this.grid.cellClass + String(station.position.x) + String(station.position.y));
     return station;
   };
@@ -81,7 +83,6 @@
       .style('fill', this.altFontFill)
       .text(this.getStationName.bind(this, cell))
       .attr('transform', this.getNameTransformTranslate.bind(this, cell));
-
   };
 
   Map.prototype.setCellCircle = function(cell) {
@@ -103,7 +104,17 @@
       .style('stroke', this.color)
       .style('fill', this.lineFill)
       .style('stroke-width', this.lineStrokeWidth)
-      .attr("points", this.getLinePoints.bind(this, cell));
+      .attr("points", this.getLinePoints.bind(this, cell))
+  };
+
+  Map.prototype.setStationClickEvent = function(cell) {
+    cell.element.select("circle")
+      .on("click", function(d) {
+        d.pulse = !d.pulse;
+        if (d.pulse) {
+          
+        }
+      });
   };
 
   Map.prototype.getStationNumber = function(cell, data) {

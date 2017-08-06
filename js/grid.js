@@ -220,7 +220,7 @@
     window.Map.Grid = new Grid("body", {
         cols: 50,
         rows: 50,
-        border: false,
+        border: true,
     });
     window.Map.Grid.init();
 
